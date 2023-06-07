@@ -119,6 +119,7 @@ MOT = {
     'A': 4,
     'C': 4,
     'BNE': 4,
+    'USING': 0,
 }
 
 assembly_file = 'question.txt'
