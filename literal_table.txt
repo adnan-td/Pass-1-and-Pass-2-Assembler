@@ -1,0 +1,3 @@
+; Literal Table
+; Literal	Value	Length
+=F'85'	40	4
