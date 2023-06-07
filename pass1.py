@@ -1,3 +1,44 @@
+def write_literal_table(literal_table):
+    with open('literal_table.txt', 'w') as literal_file:
+        literal_file.write('; Literal Table\n')
+        literal_file.write('; Literal\tValue\tLength\n')
+        literal_file.write('=====================\n')
+        for literal, data in literal_table.items():
+            lc = data['LC']
+            length = data['Length']
+            literal_file.write(f'{literal.ljust(10)}\t{lc}\t{length}\n')
+
+
+def write_symbol_table(symbol_table):
+    with open('symbol_table.txt', 'w') as symbol_file:
+        symbol_file.write('; Symbol Table\n')
+        symbol_file.write('; Symbol\tValue\n')
+        symbol_file.write('=====================\n')
+        for symbol, data in symbol_table.items():
+            value = data['Value']
+            symbol_file.write(f'{symbol.ljust(10)}\t{value}\n')
+
+
+def write_lc_table(lc_table):
+    with open('lc_table.txt', 'w') as lc_file:
+        lc_file.write('; Location Counter Table\n')
+        lc_file.write('; Line\tLC\n')
+        lc_file.write('=====================\n')
+        for i, (lc, line) in enumerate(lc_table):
+            lc_file.write(
+                f'{str(i+1).ljust(5)}\t{str(lc).ljust(10)}\t{line}\n')
+
+
+def write_base_table(base_table):
+    with open('base_table.txt', 'w') as base_file:
+        base_file.write('; Base Table\n')
+        base_file.write('; Register\tConstant\n')
+        base_file.write('=====================\n')
+        for register, data in base_table.items():
+            constant = data['Constant']
+            base_file.write(f'{register.ljust(10)}\t{constant}\n')
+
+
 def pass1(filename):
     with open(filename, 'r') as file:
         lines = file.readlines()
@@ -32,6 +73,8 @@ def pass1(filename):
 
         if tokens[0] == 'USING':
             constant_value, base_register = tokens[1].split(',')
+            if constant_value == '*':
+                constant_value = LC
             base_table[base_register] = {'Constant': constant_value}
 
         if tokens[0] in MOT:
@@ -54,34 +97,10 @@ def pass1(filename):
         literal_table[i]["LC"] = LC
         LC += 4
 
-    with open('literal_table.txt', 'w') as literal_file:
-        literal_file.write('; Literal Table\n')
-        literal_file.write('; Literal\tValue\tLength\n')
-        for literal, data in literal_table.items():
-            lc = data['LC']
-            length = data['Length']
-            literal_file.write(f'{literal}\t{lc}\t{length}\n')
-
-    with open('symbol_table.txt', 'w') as symbol_file:
-        symbol_file.write('; Symbol Table\n')
-        symbol_file.write('; Symbol\tValue\n')
-        for symbol, data in symbol_table.items():
-            value = data['Value']
-            symbol_file.write(f'{symbol}\t{value}\n')
-
-    with open('lc_table.txt', 'w') as lc_file:
-        lc_file.write('; Location Counter Table\n')
-        lc_file.write('; Line\tLC\n')
-        for i, (lc, line) in enumerate(lc_table):
-            lc_file.write(f'{i+1}\t{lc}\t{line}\n')
-
-    with open('base_table.txt', 'w') as base_file:
-        base_file.write('; Base Table\n')
-        base_file.write('; Register\tConstant\n')
-        for register, data in base_table.items():
-            constant = data['Constant']
-            base_file.write(f'{register}\t{constant}\n')
-
+    write_literal_table(literal_table)
+    write_symbol_table(symbol_table)
+    write_lc_table(lc_table)
+    write_base_table(base_table)
     print("Pass 1 completed successfully.")
 
 

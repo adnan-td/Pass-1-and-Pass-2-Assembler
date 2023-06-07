@@ -1,4 +1,5 @@
 ; Base Table
 ; Register	Constant
-4	*
-5	*
+=====================
+4         	0
+5         	10
